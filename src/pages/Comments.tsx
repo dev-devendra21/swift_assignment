@@ -9,10 +9,12 @@ import SortIcon from "../components/SortIcon";
 function Comments() {
   const [comments, setComments] = useState<Comment[]>();
   const [originalData, setOriginalData] = useState<Comment[]>([]);
-  const [sort, setSort] = useState<{ sortBy: string; order: string }>({
-    sortBy: "id",
-    order: "default",
-  });
+  const [sort, setSort] = useState<{ sortBy: string; order: string }>(
+    JSON.parse(localStorage.getItem("sort") as string) || {
+      sortBy: "",
+      order: "",
+    }
+  );
   const [itemsPerPage, setItemsPerPage] = useState(
     Number(localStorage.getItem("itemsPerPage")) || 10
   );
@@ -21,7 +23,7 @@ function Comments() {
   );
 
   const [search, setSearch] = useState(
-    localStorage.getItem("searchValue") || ""
+    localStorage.getItem("searchValue") ?? ""
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -35,6 +37,11 @@ function Comments() {
     };
     fetchComments();
   }, [startIndex, endIndex]);
+
+  useEffect(() => {
+    handleSearch();
+    localStorage.setItem("searchValue", search);
+  }, [search, startIndex, endIndex, originalData]);
 
   const handlePageChange = (page: number): void => {
     setItemsPerPage(Number(page));
@@ -65,11 +72,8 @@ function Comments() {
       setComments(filteredData);
     }
   };
-  const handleSort = (
-    sort: { sortBy: string; order: string },
-    data: Comment[]
-  ) => {
-    const sorted = [...data];
+  const handleSort = (sort: { sortBy: string; order: string }) => {
+    const sorted = [...(comments ?? [])];
 
     if (
       sort.order === "default" &&
@@ -110,30 +114,30 @@ function Comments() {
       <section className="flex items-center justify-between flex-wrap">
         <section>
           <button
-            onClick={() => handleSort({ ...sort, sortBy: "id" }, comments!)}
+            onClick={() => handleSort({ ...sort, sortBy: "id" })}
             type="button"
             className=" text-[#272A4B] p-2 mr-2 text-sm rounded-md shadow-md mb-4 cursor-pointer"
           >
             Sort Post ID
-            <SortIcon sortBy={sort.sortBy} order={sort.order} />
+            <SortIcon column="id" sortBy={sort.sortBy} order={sort.order} />
           </button>
 
           <button
             type="button"
             className=" text-[#272A4B] p-2 mr-2 text-sm rounded-md shadow-md mb-4"
-            onClick={() => handleSort({ ...sort, sortBy: "name" }, comments!)}
+            onClick={() => handleSort({ ...sort, sortBy: "name" })}
           >
             Sort Name
-            <SortIcon sortBy={sort.sortBy} order={sort.order} />
+            <SortIcon column="name" sortBy={sort.sortBy} order={sort.order} />
           </button>
 
           <button
             type="button"
             className=" text-[#272A4B] p-2 text-sm rounded-md shadow-md mb-4"
-            onClick={() => handleSort({ ...sort, sortBy: "email" }, comments!)}
+            onClick={() => handleSort({ ...sort, sortBy: "email" })}
           >
             Sort Email
-            <SortIcon sortBy={sort.sortBy} order={sort.order} />
+            <SortIcon column="email" sortBy={sort.sortBy} order={sort.order} />
           </button>
         </section>
         <section className="mb-4">
