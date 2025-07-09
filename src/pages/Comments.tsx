@@ -1,12 +1,10 @@
 import Table from "../components/Table";
-import { PiCaretUpDownThin } from "react-icons/pi";
-import { PiCaretDownThin } from "react-icons/pi";
-import { PiCaretUpThin } from "react-icons/pi";
 import { useState, useEffect } from "react";
 import { getComments } from "../api/comments";
 import type { Comment } from "../utils/types/comments";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "../components/Pagination";
+import SortIcon from "../components/SortIcon";
 
 function Comments() {
   const [comments, setComments] = useState<Comment[]>();
@@ -96,8 +94,6 @@ function Comments() {
         }
       }
       setComments(sorted);
-      localStorage.setItem("sortBy", sort.sortBy);
-      localStorage.setItem("order", sort.order);
     }
 
     const nextOrder =
@@ -119,17 +115,7 @@ function Comments() {
             className=" text-[#272A4B] p-2 mr-2 text-sm rounded-md shadow-md mb-4 cursor-pointer"
           >
             Sort Post ID
-            {sort.sortBy === "id" ? (
-              sort.order === "asc" ? (
-                <PiCaretUpThin className="ml-1 inline-block w-5 h-5" />
-              ) : sort.order === "desc" ? (
-                <PiCaretDownThin className="ml-1 inline-block w-5 h-5" />
-              ) : (
-                <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-              )
-            ) : (
-              <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-            )}
+            <SortIcon sortBy={sort.sortBy} order={sort.order} />
           </button>
 
           <button
@@ -138,17 +124,7 @@ function Comments() {
             onClick={() => handleSort({ ...sort, sortBy: "name" }, comments!)}
           >
             Sort Name
-            {sort.sortBy === "name" ? (
-              sort.order === "asc" ? (
-                <PiCaretUpThin className="ml-1 inline-block w-5 h-5" />
-              ) : sort.order === "desc" ? (
-                <PiCaretDownThin className="ml-1 inline-block w-5 h-5" />
-              ) : (
-                <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-              )
-            ) : (
-              <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-            )}
+            <SortIcon sortBy={sort.sortBy} order={sort.order} />
           </button>
 
           <button
@@ -157,17 +133,7 @@ function Comments() {
             onClick={() => handleSort({ ...sort, sortBy: "email" }, comments!)}
           >
             Sort Email
-            {sort.sortBy === "email" ? (
-              sort.order === "asc" ? (
-                <PiCaretUpThin className="ml-1 inline-block w-5 h-5" />
-              ) : sort.order === "desc" ? (
-                <PiCaretDownThin className="ml-1 inline-block w-5 h-5" />
-              ) : (
-                <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-              )
-            ) : (
-              <PiCaretUpDownThin className="ml-1 inline-block w-5 h-5" />
-            )}
+            <SortIcon sortBy={sort.sortBy} order={sort.order} />
           </button>
         </section>
         <section className="mb-4">
