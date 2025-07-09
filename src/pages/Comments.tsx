@@ -100,6 +100,8 @@ function Comments() {
       setComments(sorted);
     }
 
+    localStorage.setItem("sort", JSON.stringify(sort));
+
     const nextOrder =
       sort.order === "default"
         ? "asc"
